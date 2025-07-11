@@ -10,7 +10,6 @@ services:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ./postgres-init:/docker-entrypoint-initdb.d
     networks:
       - school-registry-network
     healthcheck:
@@ -41,14 +40,12 @@ services:
     networks:
       - school-registry-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
       interval: 30s
       timeout: 10s
       retries: 5
-      start_period: 60s
+      start_period: 120s
     restart: unless-stopped
-    volumes:
-      - ./backend/logs:/app/logs
 
   frontend:
     build:
@@ -65,7 +62,7 @@ services:
     networks:
       - school-registry-network
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
