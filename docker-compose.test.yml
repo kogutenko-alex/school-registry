@@ -1,0 +1,110 @@
+version: '3.8'
+
+# Test configuration for quick validation
+# Usage: docker-compose -f docker-compose.test.yml up --build
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: school-registry-db-test
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-schooldb}
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    volumes:
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    networks:
+      - school-registry-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-schooldb}"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: school-registry-backend-test
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-schooldb}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_LIQUIBASE_ENABLED: true
+      SERVER_PORT: 8080
+    ports:
+      - "8081:8080"  # Different port to avoid conflicts
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - school-registry-test-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  school-registry-test-network:
+    driver: bridge 
+ 
+
+# Test configuration for quick validation
+# Usage: docker-compose -f docker-compose.test.yml up --build
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: school-registry-db-test
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-schooldb}
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+    ports:
+      - "5433:5432"  # Different port to avoid conflicts
+    volumes:
+      - ./postgres-init:/docker-entrypoint-initdb.d
+    networks:
+      - school-registry-test-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-user} -d ${POSTGRES_DB:-schooldb}"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: school-registry-backend-test
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-schooldb}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-user}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pass}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: none
+      SPRING_LIQUIBASE_ENABLED: true
+      SERVER_PORT: 8080
+    ports:
+      - "8081:8080"  # Different port to avoid conflicts
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - school-registry-test-network
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+
+networks:
+  school-registry-test-network:
+    driver: bridge 

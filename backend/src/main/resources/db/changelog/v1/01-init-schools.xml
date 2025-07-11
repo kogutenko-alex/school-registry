@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="001-create-schools-table" author="school-registry">
+        <createTable tableName="schools">
+            <column name="id" type="UUID">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="edrpou" type="VARCHAR(8)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="region" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-create-edrpou-index" author="school-registry">
+        <createIndex tableName="schools" indexName="idx_schools_edrpou">
+            <column name="edrpou"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="003-create-region-index" author="school-registry">
+        <createIndex tableName="schools" indexName="idx_schools_region">
+            <column name="region"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="004-create-type-index" author="school-registry">
+        <createIndex tableName="schools" indexName="idx_schools_type">
+            <column name="type"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="005-insert-sample-data" author="school-registry">
+        <insert tableName="schools">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440001"/>
+            <column name="name" value="Київська гімназія №1"/>
+            <column name="edrpou" value="12345678"/>
+            <column name="region" value="Київська область"/>
+            <column name="type" value="GYMNASIUM"/>
+            <column name="is_active" valueBoolean="false"/>
+        </insert>
+        <insert tableName="schools">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440002"/>
+            <column name="name" value="Львівський ліцей №15"/>
+            <column name="edrpou" value="87654321"/>
+            <column name="region" value="Львівська область"/>
+            <column name="type" value="LYCEUM"/>
+            <column name="is_active" valueBoolean="true"/>
+        </insert>
+        <insert tableName="schools">
+            <column name="id" value="550e8400-e29b-41d4-a716-446655440003"/>
+            <column name="name" value="Харківська ЗЗСО №7"/>
+            <column name="edrpou" value="11223344"/>
+            <column name="region" value="Харківська область"/>
+            <column name="type" value="GENERAL_SECONDARY_SCHOOL"/>
+            <column name="is_active" valueBoolean="false"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog> 
