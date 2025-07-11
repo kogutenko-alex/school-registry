@@ -33,7 +33,7 @@ public class SchoolService {
                 .and(SchoolSpecification.hasTypes(filter.getTypes()))
                 .and(SchoolSpecification.hasStatuses(filter.getStatuses()));
         
-        // Якщо немає сортування, використовуємо сортування за датою створення (найновіші спочатку)
+        // If no sorting is specified, use default sorting by creation date (newest first)
         if (pageable.getSort().isEmpty()) {
             pageable = PageRequest.of(
                 pageable.getPageNumber(),

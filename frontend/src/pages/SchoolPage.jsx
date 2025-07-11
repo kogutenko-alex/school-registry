@@ -56,18 +56,18 @@ const SchoolPage = () => {
     totalPages: 0
   })
 
-  // Filters - змінюю структуру для мульти-селекта
+  // Filters - change structure for multi-select
   const [filters, setFilters] = useState({
     name: '',
     region: '',
-    types: [], // масив для мульти-селекта
-    statuses: [] // масив для мульти-селекта
+    types: [], // array for multi-select
+    statuses: [] // array for multi-select
   })
 
   // Sorting state
   const [sorting, setSorting] = useState({
     field: null,
-    direction: 'asc' // 'asc' або 'desc'
+    direction: 'asc' // 'asc' or 'desc'
   })
 
   // Load schools on component mount
@@ -104,7 +104,7 @@ const SchoolPage = () => {
       }))
     } catch (error) {
       console.error('Error loading schools:', error)
-      setSchools([]) // Важливо: при помилці встановлюємо пустий масив
+      setSchools([]) // Important: set empty array on error
       setPagination(prev => ({
         ...prev,
         currentPage: 0,
@@ -121,7 +121,7 @@ const SchoolPage = () => {
     setFormLoading(true)
     try {
       const newSchool = await schoolApi.createSchool(schoolData)
-      // Оновити дані без скидання фільтрів
+      // Update data without resetting filters
       await loadSchools(pagination.currentPage, pagination.pageSize)
     } catch (error) {
       throw error
@@ -133,7 +133,7 @@ const SchoolPage = () => {
   const handleDeactivateSchool = async (schoolId) => {
     try {
       const deactivatedSchool = await schoolApi.deactivateSchool(schoolId)
-      // Перезавантажити дані з сервера з урахуванням поточних фільтрів
+      // Reload data from server with current filters
       await loadSchools(pagination.currentPage, pagination.pageSize)
     } catch (error) {
       throw error
@@ -150,7 +150,7 @@ const SchoolPage = () => {
 
   const handleFormSubmit = async (schoolData) => {
     await handleCreateSchool(schoolData)
-    onClose() // Закрити форму після успішного створення
+          onClose() // Close form after successful creation
   }
 
   const handleFilterChange = (field, value) => {
@@ -185,7 +185,7 @@ const SchoolPage = () => {
     }))
   }
 
-  // Функція для сортування даних
+  // Function for sorting data
   const sortSchools = (schoolsToSort) => {
     if (!sorting.field) return schoolsToSort
 
@@ -193,7 +193,7 @@ const SchoolPage = () => {
       let aValue = a[sorting.field]
       let bValue = b[sorting.field]
 
-      // Обробка різних типів даних
+      // Handle different data types
       if (sorting.field === 'name' || sorting.field === 'edrpou' || sorting.field === 'region') {
         aValue = (aValue || '').toLowerCase()
         bValue = (bValue || '').toLowerCase()
@@ -207,10 +207,10 @@ const SchoolPage = () => {
     })
   }
 
-  // Серверна фільтрація + клієнтське сортування
+  // Server-side filtering + client-side sorting
   const filteredAndSortedSchools = sortSchools(schools)
 
-  // Компонент для мульти-селекта
+  // Component for multi-select
   const MultiSelectPopover = ({ label, options, selectedValues, onChange, placeholder }) => {
     const selectedCount = selectedValues.length
     const displayText = selectedCount === 0 ? placeholder : 

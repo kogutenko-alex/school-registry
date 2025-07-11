@@ -91,7 +91,7 @@ const SchoolForm = ({ isOpen, onClose, onSubmit, school = null, isLoading = fals
           : `Школу "${formData.name}" успішно створено`,
         { title: school ? 'Школу оновлено' : 'Школу створено' }
       )
-      // Форма закривається в батьківському компоненті після успішного створення
+      // Form closes in parent component after successful creation
     } catch (error) {
       console.error('Form submission error:', error)
       handleApiError(error, showError)

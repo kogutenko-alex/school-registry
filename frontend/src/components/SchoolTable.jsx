@@ -62,7 +62,7 @@ const SchoolTable = ({ schools, onDeactivate, isLoading = false, onSort, sorting
     return isActive ? 'Активна' : 'Неактивна'
   }
 
-  // Компонент для сортованого заголовка
+  // Component for sortable header
   const SortableHeader = ({ field, children, ...props }) => {
     const isActive = sorting?.field === field
     const direction = sorting?.direction

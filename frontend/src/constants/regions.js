@@ -1,4 +1,4 @@
-// Список областей України
+// List of Ukrainian regions
 export const ukraineRegions = [
   'Вінницька область',
   'Волинська область', 

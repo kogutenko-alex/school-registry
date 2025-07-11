@@ -30,7 +30,7 @@ export const schoolApi = {
       filters.statuses.forEach(status => params.append('statuses', status))
     }
     
-    // Додаємо пагінацію
+    // Add pagination
     params.append('page', page.toString())
     params.append('size', size.toString())
     params.append('sort', 'name')
